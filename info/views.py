@@ -48,7 +48,7 @@ def login_view(request):
 #-----------------Department List-----------------
 
 
-
+@login_required
 def DepartmentList(request):
     departmentlist = Department.objects.all()
 
