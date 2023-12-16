@@ -1,0 +1,453 @@
+{% extends 'index.html' %}
+{% block content %}
+    {% load static %}
+    <style>
+        .row {
+            display: flex;
+            
+        }
+
+        .container {
+            width: 90%;
+            max-width: 550px;
+           
+        }
+
+        .uproute-container,
+        .downroute-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ccc;
+            margin: 0px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 5px; /* Add margin between containers */
+        }
+
+                /* Updated styles for form and todo container */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0px;
+        }
+
+        form label {  
+            color: #555;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+            align-items:
+        }
+
+        form input,
+        form button {
+            margin: 5px;
+            padding: 8px; /* Smaller padding */
+            border: none;
+            background: #fff;
+            font-size: 0.8rem; /* Smaller font size */
+            width: 80%; /* Adjusted width */
+        }
+
+        form input {
+            border: 2px solid transparent;
+            width: 70%;
+            height: 2.5em;
+            padding-left: 0.8em;
+            outline: none;
+            overflow: hidden;
+            background-color: #F3F3F3;
+            border-radius: 10px;
+            transition: all 0.5s;
+        }
+          
+        form input:hover,
+        form input:focus {
+            border: 2px solid transparent;
+            width: 70%;
+            height: 2.5em;
+            padding-left: 0.8em;
+            outline: none;
+            overflow: hidden;
+            background-color: #F3F3F3;
+            border-radius: 10px;
+            transition: all 0.5s;
+        }
+
+        form button {
+            width: auto;
+            color: rgb(238, 139, 97);
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.5s ease-out;
+        }
+
+        form button:hover {
+            color: #fff;
+            background: rgb(238, 139, 97);
+        }
+
+        .todo-list {
+            min-width: 70%; /* Adjusted width */
+            list-style: none;
+            padding: 8px; /* Smaller padding */
+        }
+
+        .todo {
+            background: #fff;
+            color: black;
+            margin: 5px; /* Smaller margin */
+            padding: 8px; /* Smaller padding */
+            font-size: 0.8rem; /* Smaller font size */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.5s ease;
+        }
+
+        .todo-button{
+            color: #fff;
+            background: #ff6f47;
+            font-size: 0.8rem; /* Smaller font size */
+            cursor: pointer;
+            border: none;
+            padding: 4px; /* Smaller padding */
+        }
+
+        .todo li {
+            flex: 1;
+        }
+
+        .trash-btn,
+        .complete-btn {
+            color: #fff;
+            background: #ff6f47;
+            font-size: 0.8rem; /* Smaller font size */
+            cursor: pointer;
+            border: none;
+            padding: 8px; /* Smaller padding */
+        }
+
+        .complete-btn {
+            background: rgb(83, 196, 83);
+        }
+
+        .fa-check,
+        .fa-trash {
+            pointer-events: none;
+        }
+
+        .todo-item {
+            display: block;
+            width: 80%;
+            padding: 8px;
+            font-size: 12px;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            outline: none;
+            background-color: transparent;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            opacity: 0.5;
+        }
+
+        .fall {
+            transform: translateY(8rem) rotateZ(20deg);
+            opacity: 0;
+        }
+
+        /* Updated styles to hide todo-container when empty */
+        .todo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .todo-container:empty {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="row">
+        <!-- Uproute Containers -->
+        <div class="container">
+            <!-- Uproute Saturday -->
+            <h5 style="display: flex; align-items: center; justify-content: center; text-align: center;">
+                    <i class="material-icons" style="font-size: 24px; margin-right: 10px;">directions_bus</i>
+                    Uproute
+                </h5>
+            <div class="uproute-container">
+                
+                <form>
+                    <br>
+                    <label for="saturday">Saturday</label>
+                    <input type="text" class='todo-inputs saturday-input'>
+                    <button class='todo-button saturday-button'>
+                        <i class='fas fa-plus-square'></i>
+                    </button>
+                </form>
+                <div class="todo-container saturday-todo-container">
+                    <ul class="todo-list saturday-todo-list"></ul>
+                </div>
+            </div>
+
+            <!-- Uproute Sunday -->
+            <div class="uproute-container">
+                
+                <form>
+                    <br>
+                    <label for="sunday">Sunday</label>
+                    <input type="text" class='todo-inputs sunday-input'>
+                    <button class='todo-button sunday-button'>
+                        <i class='fas fa-plus-square'></i>
+                    </button>
+                </form>
+                <div class="todo-container sunday-todo-container">
+                    <ul class="todo-list sunday-todo-list"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Downroute Containers -->
+        <div class="container">
+            <!-- Downroute Saturday -->
+            <h5 style="display: flex; align-items: center; justify-content: center; text-align: center;">
+                    <i class="material-icons" style="font-size: 24px; margin-right: 10px;">directions_bus</i>
+                    Downroute 
+                </h5>
+            <div class="downroute-container">
+                
+                <form>
+                    <br>
+                    <label for="saturday">Saturday</label>
+                    <input type="text" class='todo-inputs saturday-input'>
+                    <button class='todo-button saturday-button'>
+                        <i class='fas fa-plus-square'></i>
+                    </button>
+                </form>
+                <div class="todo-container saturday-todo-container">
+                    <ul class="todo-list saturday-todo-list"></ul>
+                </div>
+            </div>
+
+            <!-- Downroute Sunday -->
+            <div class="downroute-container">
+                
+                <form>
+                    <br>
+                    <label for="sunday">Sunday</label>
+                    <input type="text" class='todo-inputs sunday-input'>
+                    <button class='todo-button sunday-button'>
+                        <i class='fas fa-plus-square'></i>
+                    </button>
+                </form>
+                <div class="todo-container sunday-todo-container">
+                    <ul class="todo-list sunday-todo-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+       <script>
+        // Todo List JavaScript code for Uproute goes here
+        const saturdayInputs = document.querySelector(".saturday-input");
+        const saturdayButton = document.querySelector(".saturday-button");
+        const saturdayList = document.querySelector(".saturday-todo-list");
+
+        document.addEventListener("DOMContentLoaded", getSaturdayTodos);
+        saturdayButton.addEventListener("click", addSaturdayTodos);
+        saturdayList.addEventListener("click", deleteSaturdayCheck);
+
+        function addSaturdayTodos(e) {
+            e.preventDefault();
+
+            const todoDiv = document.createElement("div");
+            todoDiv.classList.add("todo");
+
+            const newTodo = document.createElement("li");
+            newTodo.classList.add("todo-item");
+            newTodo.innerText = saturdayInputs.value;
+            todoDiv.appendChild(newTodo);
+
+            const trashButton = document.createElement("button");
+            trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+            trashButton.classList.add("trash-btn");
+            todoDiv.appendChild(trashButton);
+
+            saturdayList.appendChild(todoDiv);
+
+            saturdayInputs.value = "";
+        }
+
+        function deleteSaturdayCheck(e) {
+            const item = e.target;
+
+            if (item.classList[0] === "trash-btn") {
+                const todo = item.parentElement;
+                todo.classList.add("fall");
+                todo.addEventListener("transitionend", function () {
+                    todo.remove();
+                });
+            }
+        }
+
+        function getSaturdayTodos() {
+            let saturdayTodos = [];
+
+            saturdayTodos.forEach(function (todo) {
+                const todoDiv = document.createElement("div");
+                todoDiv.classList.add("todo");
+
+                const newTodo = document.createElement("li");
+                newTodo.classList.add("todo-item");
+                newTodo.innerText = todo;
+                todoDiv.appendChild(newTodo);
+
+                const trashButton = document.createElement("button");
+                trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+                trashButton.classList.add("trash-btn");
+                todoDiv.appendChild(trashButton);
+
+                saturdayList.appendChild(todoDiv);
+            });
+        }
+
+        // Add similar functions for Sunday and Monday
+
+        // Todo List JavaScript code for Sunday goes here
+        const sundayInputs = document.querySelector(".sunday-input");
+        const sundayButton = document.querySelector(".sunday-button");
+        const sundayList = document.querySelector(".sunday-todo-list");
+
+        document.addEventListener("DOMContentLoaded", getSundayTodos);
+        sundayButton.addEventListener("click", addSundayTodos);
+        sundayList.addEventListener("click", deleteSundayCheck);
+
+        function addSundayTodos(e) {
+            e.preventDefault();
+
+            const todoDiv = document.createElement("div");
+            todoDiv.classList.add("todo");
+
+            const newTodo = document.createElement("li");
+            newTodo.classList.add("todo-item");
+            newTodo.innerText = sundayInputs.value;
+            todoDiv.appendChild(newTodo);
+
+            const trashButton = document.createElement("button");
+            trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+            trashButton.classList.add("trash-btn");
+            todoDiv.appendChild(trashButton);
+
+            sundayList.appendChild(todoDiv);
+
+            sundayInputs.value = "";
+        }
+
+        function deleteSundayCheck(e) {
+            const item = e.target;
+
+            if (item.classList[0] === "trash-btn") {
+                const todo = item.parentElement;
+                todo.classList.add("fall");
+                todo.addEventListener("transitionend", function () {
+                    todo.remove();
+                });
+            }
+        }
+
+        function getSundayTodos() {
+            let sundayTodos = [];
+
+            sundayTodos.forEach(function (todo) {
+                const todoDiv = document.createElement("div");
+                todoDiv.classList.add("todo");
+
+                const newTodo = document.createElement("li");
+                newTodo.classList.add("todo-item");
+                newTodo.innerText = todo;
+                todoDiv.appendChild(newTodo);
+
+                const trashButton = document.createElement("button");
+                trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+                trashButton.classList.add("trash-btn");
+                todoDiv.appendChild(trashButton);
+
+                sundayList.appendChild(todoDiv);
+            });
+        }
+
+        // Todo List JavaScript code for Monday goes here
+        const mondayInputs = document.querySelector(".monday-input");
+        const mondayButton = document.querySelector(".monday-button");
+        const mondayList = document.querySelector(".monday-todo-list");
+
+        document.addEventListener("DOMContentLoaded", getMondayTodos);
+        mondayButton.addEventListener("click", addMondayTodos);
+        mondayList.addEventListener("click", deleteMondayCheck);
+
+        function addMondayTodos(e) {
+            e.preventDefault();
+
+            const todoDiv = document.createElement("div");
+            todoDiv.classList.add("todo");
+
+            const newTodo = document.createElement("li");
+            newTodo.classList.add("todo-item");
+            newTodo.innerText = mondayInputs.value;
+            todoDiv.appendChild(newTodo);
+
+            const trashButton = document.createElement("button");
+            trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+            trashButton.classList.add("trash-btn");
+            todoDiv.appendChild(trashButton);
+
+            mondayList.appendChild(todoDiv);
+
+            mondayInputs.value = "";
+        }
+
+        function deleteMondayCheck(e) {
+            const item = e.target;
+
+            if (item.classList[0] === "trash-btn") {
+                const todo = item.parentElement;
+                todo.classList.add("fall");
+                todo.addEventListener("transitionend", function () {
+                    todo.remove();
+                });
+            }
+        }
+
+        function getMondayTodos() {
+            let mondayTodos = [];
+
+            mondayTodos.forEach(function (todo) {
+                const todoDiv = document.createElement("div");
+                todoDiv.classList.add("todo");
+
+                const newTodo = document.createElement("li");
+                newTodo.classList.add("todo-item");
+                newTodo.innerText = todo;
+                todoDiv.appendChild(newTodo);
+
+                const trashButton = document.createElement("button");
+                trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+                trashButton.classList.add("trash-btn");
+                todoDiv.appendChild(trashButton);
+
+                mondayList.appendChild(todoDiv);
+            });
+        }
+    </script>
+
+{% endblock %}

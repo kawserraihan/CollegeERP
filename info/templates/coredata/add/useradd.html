@@ -1,0 +1,102 @@
+{% extends 'index.html' %}
+{% block content %}
+
+{% load static %}
+
+<style>
+
+</style>
+
+<div class="page-header">
+    <h3 class="page-title">Add User</h3>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="post" class="user-form" enctype="multipart/form-data" id="addUserForm">
+                    {% csrf_token %}
+
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="id_name">Name:</label>
+                            <input type="text" name="name" id="id_name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="department">Department:</label>
+                            <select name="department" id="department" class="custom-select">
+                                <option value="">Select Department</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="id_contact_number">Contact Number:</label>
+                            <input type="text" name="contact_number" id="id_contact_number" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_email">Email:</label>
+                            <input type="email" name="email" id="id_email" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_address">Address:</label>
+                        <textarea name="address" id="id_address" class="form-control"></textarea>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="id_username">Username:</label>
+                            <input type="text" name="username" id="id_username" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="password1">Password:</label>
+                            <input type="password" name="password1" id="password1" class="form-control" required autocomplete="new-password">
+                            <small id="passwordHelp" class="form-text text-muted">
+                                Your password must:
+                                <ul>
+                                    <li>Not be too similar to your other personal information.</li>
+                                    <li>Contain at least 8 characters.</li>
+                                    <li>Not be a commonly used password.</li>
+                                    <li>Not be entirely numeric.</li>
+                                </ul>
+                            </small>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="password2">Confirm Password:</label>
+                            <input type="password" name="password2" id="password2" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Add User</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    // Use AJAX to get department options and populate the department dropdown
+    $.ajax({
+        url: "{% url 'get_departments' %}",
+        dataType: "json",
+        success: function (data) {
+            $("#department").html(data);
+        }
+    });
+})
+</script>
+
+
+
+
+{% endblock %}
