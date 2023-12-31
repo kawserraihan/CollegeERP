@@ -187,12 +187,14 @@
                 </h5>
             <div class="uproute-container">
                 
-                <form>
-                    <br>
+                <form method="post" action="{% url 'shuttle_bus' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="route" value="Uproute">
+                    <input type="hidden" name="day" value="Saturday">
                     <label for="saturday">Saturday</label>
-                    <input type="text" class='todo-inputs saturday-input'>
-                    <button class='todo-button saturday-button'>
-                        <i class='fas fa-plus-square'></i>
+                    <input type="text" name="input_data" class="todo-inputs" placeholder="Enter time and bus number (e.g., 12:00 PM Bus no 12)">
+                    <button class="todo-button" type="submit">
+                        <i class="fas fa-plus-square"></i>
                     </button>
                 </form>
                 <div class="todo-container saturday-todo-container">
@@ -257,197 +259,69 @@
         </div>
     </div>
 
-       <script>
-        // Todo List JavaScript code for Uproute goes here
-        const saturdayInputs = document.querySelector(".saturday-input");
-        const saturdayButton = document.querySelector(".saturday-button");
-        const saturdayList = document.querySelector(".saturday-todo-list");
-
-        document.addEventListener("DOMContentLoaded", getSaturdayTodos);
-        saturdayButton.addEventListener("click", addSaturdayTodos);
-        saturdayList.addEventListener("click", deleteSaturdayCheck);
-
-        function addSaturdayTodos(e) {
-            e.preventDefault();
-
-            const todoDiv = document.createElement("div");
-            todoDiv.classList.add("todo");
-
-            const newTodo = document.createElement("li");
-            newTodo.classList.add("todo-item");
-            newTodo.innerText = saturdayInputs.value;
-            todoDiv.appendChild(newTodo);
-
-            const trashButton = document.createElement("button");
-            trashButton.innerHTML = '<i class="fas fa-trash"></i>';
-            trashButton.classList.add("trash-btn");
-            todoDiv.appendChild(trashButton);
-
-            saturdayList.appendChild(todoDiv);
-
-            saturdayInputs.value = "";
-        }
-
-        function deleteSaturdayCheck(e) {
-            const item = e.target;
-
-            if (item.classList[0] === "trash-btn") {
-                const todo = item.parentElement;
-                todo.classList.add("fall");
-                todo.addEventListener("transitionend", function () {
-                    todo.remove();
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dayButtons = document.querySelectorAll(".day-button");
+        
+            dayButtons.forEach(function (button) {
+                button.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const form = button.parentNode;  // Get the parent form element
+                    const timeInput = form.querySelector(".todo-inputs");
+                    const busNoInput = form.querySelector(".todo-inputs.bus-no-input");
+                    const routeInput = form.querySelector("input[name='route']");
+                    const dayInput = form.querySelector("input[name='day']");
+                    const todoList = form.nextElementSibling.querySelector(".todo-list");
+        
+                    const time = timeInput.value;
+                    const busNo = busNoInput.value;
+                    const route = form.closest('.uproute-container') ? 'Uproute' : 'Downroute';
+                    const dayLabel = form.querySelector('label');
+                    const day = dayLabel.innerText;
+        
+                    // Set values for route and day in hidden inputs
+                    routeInput.value = route;
+                    dayInput.value = day;
+        
+                    // Create a new list item
+                    const todoDiv = document.createElement("div");
+                    todoDiv.classList.add("todo");
+        
+                    const newTodo = document.createElement("li");
+                    newTodo.classList.add("todo-item");
+                    newTodo.innerText = `${route} - ${day}: ${time} Bus no ${busNo}`;
+                    todoDiv.appendChild(newTodo);
+        
+                    const trashButton = document.createElement("button");
+                    trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+                    trashButton.classList.add("trash-btn");
+                    todoDiv.appendChild(trashButton);
+        
+                    // Append the new item to the todo list
+                    todoList.appendChild(todoDiv);
+        
+                    // Clear input fields
+                    timeInput.value = "";
+                    busNoInput.value = "";
+        
+                    // Send data to the backend using AJAX
+                    const formData = new FormData(form);
+        
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Handle the response from the server if needed
+                        console.log(data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
                 });
-            }
-        }
-
-        function getSaturdayTodos() {
-            let saturdayTodos = [];
-
-            saturdayTodos.forEach(function (todo) {
-                const todoDiv = document.createElement("div");
-                todoDiv.classList.add("todo");
-
-                const newTodo = document.createElement("li");
-                newTodo.classList.add("todo-item");
-                newTodo.innerText = todo;
-                todoDiv.appendChild(newTodo);
-
-                const trashButton = document.createElement("button");
-                trashButton.innerHTML = '<i class="fas fa-trash"></i>';
-                trashButton.classList.add("trash-btn");
-                todoDiv.appendChild(trashButton);
-
-                saturdayList.appendChild(todoDiv);
             });
-        }
-
-        // Add similar functions for Sunday and Monday
-
-        // Todo List JavaScript code for Sunday goes here
-        const sundayInputs = document.querySelector(".sunday-input");
-        const sundayButton = document.querySelector(".sunday-button");
-        const sundayList = document.querySelector(".sunday-todo-list");
-
-        document.addEventListener("DOMContentLoaded", getSundayTodos);
-        sundayButton.addEventListener("click", addSundayTodos);
-        sundayList.addEventListener("click", deleteSundayCheck);
-
-        function addSundayTodos(e) {
-            e.preventDefault();
-
-            const todoDiv = document.createElement("div");
-            todoDiv.classList.add("todo");
-
-            const newTodo = document.createElement("li");
-            newTodo.classList.add("todo-item");
-            newTodo.innerText = sundayInputs.value;
-            todoDiv.appendChild(newTodo);
-
-            const trashButton = document.createElement("button");
-            trashButton.innerHTML = '<i class="fas fa-trash"></i>';
-            trashButton.classList.add("trash-btn");
-            todoDiv.appendChild(trashButton);
-
-            sundayList.appendChild(todoDiv);
-
-            sundayInputs.value = "";
-        }
-
-        function deleteSundayCheck(e) {
-            const item = e.target;
-
-            if (item.classList[0] === "trash-btn") {
-                const todo = item.parentElement;
-                todo.classList.add("fall");
-                todo.addEventListener("transitionend", function () {
-                    todo.remove();
-                });
-            }
-        }
-
-        function getSundayTodos() {
-            let sundayTodos = [];
-
-            sundayTodos.forEach(function (todo) {
-                const todoDiv = document.createElement("div");
-                todoDiv.classList.add("todo");
-
-                const newTodo = document.createElement("li");
-                newTodo.classList.add("todo-item");
-                newTodo.innerText = todo;
-                todoDiv.appendChild(newTodo);
-
-                const trashButton = document.createElement("button");
-                trashButton.innerHTML = '<i class="fas fa-trash"></i>';
-                trashButton.classList.add("trash-btn");
-                todoDiv.appendChild(trashButton);
-
-                sundayList.appendChild(todoDiv);
-            });
-        }
-
-        // Todo List JavaScript code for Monday goes here
-        const mondayInputs = document.querySelector(".monday-input");
-        const mondayButton = document.querySelector(".monday-button");
-        const mondayList = document.querySelector(".monday-todo-list");
-
-        document.addEventListener("DOMContentLoaded", getMondayTodos);
-        mondayButton.addEventListener("click", addMondayTodos);
-        mondayList.addEventListener("click", deleteMondayCheck);
-
-        function addMondayTodos(e) {
-            e.preventDefault();
-
-            const todoDiv = document.createElement("div");
-            todoDiv.classList.add("todo");
-
-            const newTodo = document.createElement("li");
-            newTodo.classList.add("todo-item");
-            newTodo.innerText = mondayInputs.value;
-            todoDiv.appendChild(newTodo);
-
-            const trashButton = document.createElement("button");
-            trashButton.innerHTML = '<i class="fas fa-trash"></i>';
-            trashButton.classList.add("trash-btn");
-            todoDiv.appendChild(trashButton);
-
-            mondayList.appendChild(todoDiv);
-
-            mondayInputs.value = "";
-        }
-
-        function deleteMondayCheck(e) {
-            const item = e.target;
-
-            if (item.classList[0] === "trash-btn") {
-                const todo = item.parentElement;
-                todo.classList.add("fall");
-                todo.addEventListener("transitionend", function () {
-                    todo.remove();
-                });
-            }
-        }
-
-        function getMondayTodos() {
-            let mondayTodos = [];
-
-            mondayTodos.forEach(function (todo) {
-                const todoDiv = document.createElement("div");
-                todoDiv.classList.add("todo");
-
-                const newTodo = document.createElement("li");
-                newTodo.classList.add("todo-item");
-                newTodo.innerText = todo;
-                todoDiv.appendChild(newTodo);
-
-                const trashButton = document.createElement("button");
-                trashButton.innerHTML = '<i class="fas fa-trash"></i>';
-                trashButton.classList.add("trash-btn");
-                todoDiv.appendChild(trashButton);
-
-                mondayList.appendChild(todoDiv);
-            });
-        }
+        });
     </script>
 
 {% endblock %}

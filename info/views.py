@@ -16,6 +16,7 @@ from django.http import HttpResponseBadRequest, HttpResponseRedirect
 from django.contrib.auth.hashers import make_password
 from django.contrib import messages
 from django.views import View
+import re
 
 from django.contrib.auth import get_user_model
 
@@ -403,4 +404,31 @@ def DeleteUser(request, id):
 
 @login_required
 def ShuttleBus(request):
+    if request.method == 'POST':
+        input_data = request.POST.get('input_data', '')
+        day = request.POST.get('day')
+        route = request.POST.get('route')
+        
+        # Split the input by space
+        data_parts = input_data.split()
+        print(data_parts)
+
+        # Extract time, bus_no, and day if available
+        time = data_parts[0] if data_parts else ''
+        bus_no = data_parts[-1] if data_parts else ''
+        # day = data_parts[-2] if len(data_parts) > 1 else ''
+
+        # Get or create the Day instance
+        # day, created = Day.objects.get_or_create(day=day)
+
+        # Create BusSchedule instance
+        bus_schedule = BusSchedule.objects.create(
+            time=time,
+            bus_no=bus_no,
+            day=day,
+            route_type=route
+        )
+
+        # return JsonResponse({'message': 'Bus schedule added successfully'}, status=200)
+
     return render(request, "modules/shuttle-bus.html")

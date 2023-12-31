@@ -2,45 +2,79 @@
 {% block content %}
     {% load static %}
     <style>
-        
-
         .row {
             display: flex;
+            
         }
 
-        .container1,
-        .container2 {
-            flex: 1; /* Each container takes up equal space */
-            padding: 20px;
+        .container {
+            width: 90%;
+            max-width: 550px;
+           
+        }
+
+        .uproute-container,
+        .downroute-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
             border: 1px solid #ccc;
-            margin: 10px;
+            margin: 0px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 5px; /* Add margin between containers */
         }
 
-        .todo-container {
-            margin-top: 20px; /* Adjust the margin as needed */
-        }
-
-        /* Updated styles for form and todo container */
+                /* Updated styles for form and todo container */
         form {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 0px;
+        }
+
+        form label {  
+            color: #555;
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+            align-items:
         }
 
         form input,
-        form button,
-        form select {
+        form button {
             margin: 5px;
-            padding: 10px;
+            padding: 8px; /* Smaller padding */
             border: none;
             background: #fff;
-            font-size: 1rem;
+            font-size: 0.8rem; /* Smaller font size */
+            width: 80%; /* Adjusted width */
         }
 
         form input {
-            width: 100%;
+            border: 2px solid transparent;
+            width: 70%;
+            height: 2.5em;
+            padding-left: 0.8em;
+            outline: none;
+            overflow: hidden;
+            background-color: #F3F3F3;
+            border-radius: 10px;
+            transition: all 0.5s;
+        }
+          
+        form input:hover,
+        form input:focus {
+            border: 2px solid transparent;
+            width: 70%;
+            height: 2.5em;
+            padding-left: 0.8em;
+            outline: none;
+            overflow: hidden;
+            background-color: #F3F3F3;
+            border-radius: 10px;
+            transition: all 0.5s;
         }
 
         form button {
@@ -57,21 +91,30 @@
         }
 
         .todo-list {
-            min-width: 30%;
+            min-width: 70%; /* Adjusted width */
             list-style: none;
-            padding: 10px;
+            padding: 8px; /* Smaller padding */
         }
 
         .todo {
             background: #fff;
             color: black;
-            margin: 10px;
-            padding: 10px;
-            font-size: 1rem;
+            margin: 5px; /* Smaller margin */
+            padding: 8px; /* Smaller padding */
+            font-size: 0.8rem; /* Smaller font size */
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: all 0.5s ease;
+        }
+
+        .todo-button{
+            color: #fff;
+            background: #ff6f47;
+            font-size: 0.8rem; /* Smaller font size */
+            cursor: pointer;
+            border: none;
+            padding: 4px; /* Smaller padding */
         }
 
         .todo li {
@@ -82,10 +125,10 @@
         .complete-btn {
             color: #fff;
             background: #ff6f47;
-            font-size: 1rem;
+            font-size: 0.8rem; /* Smaller font size */
             cursor: pointer;
             border: none;
-            padding: 10px;
+            padding: 8px; /* Smaller padding */
         }
 
         .complete-btn {
@@ -98,7 +141,14 @@
         }
 
         .todo-item {
-            padding: 0.5rem;
+            display: block;
+            width: 80%;
+            padding: 8px;
+            font-size: 12px;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            outline: none;
+            background-color: transparent;
         }
 
         .completed {
@@ -110,158 +160,141 @@
             transform: translateY(8rem) rotateZ(20deg);
             opacity: 0;
         }
+
+        /* Updated styles to hide todo-container when empty */
+        .todo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .todo-container:empty {
+            display: none;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="row">
-        <div class="container1">
-            <!-- Content for container 1 goes here -->
-            <h2> Uproute</h2>
-           
-
-            <form>
-                <input type="text" class='todo-inputs'>
-                <button class='todo-button'>
-                    <i class='fas fa-plus-square'></i>
-                </button>
-                <div class="select">
-                    <select name="todos" class='filter-todos'>
-                        <option value="all">All</option>
-                        <option value="completed">Completed</option>
-                        <option value="uncompleted">Uncompleted</option>
-                    </select>
+        <!-- Uproute Containers -->
+        <div class="container">
+            <!-- Uproute Saturday -->
+            <h5 style="display: flex; align-items: center; justify-content: center; text-align: center;">
+                    <i class="material-icons" style="font-size: 24px; margin-right: 10px;">directions_bus</i>
+                    Uproute
+                </h5>
+            <div class="uproute-container">
+                
+                <form method="post" action="{% url 'shuttle_bus' %}">
+                    {% csrf_token %}
+                    <label for="saturday">Saturday</label>
+                    <input type="text" name="input_data" class="todo-inputs" placeholder="Enter time and bus number (e.g., 12:00 PM Bus no 12)">
+                    <button class="todo-button" type="submit">
+                        <i class="fas fa-plus-square"></i>
+                    </button>
+                </form>
+                <div class="todo-container saturday-todo-container">
+                    <ul class="todo-list saturday-todo-list"></ul>
                 </div>
-            </form>
-            <div class="todo-container">
-                <ul class="todo-list"></ul>
+            </div>
+
+            <!-- Uproute Sunday -->
+            <div class="uproute-container">
+                
+                <form>
+                    <br>
+                    <label for="sunday">Sunday</label>
+                    <input type="text" class='todo-inputs sunday-input'>
+                    <button class='todo-button sunday-button'>
+                        <i class='fas fa-plus-square'></i>
+                    </button>
+                </form>
+                <div class="todo-container sunday-todo-container">
+                    <ul class="todo-list sunday-todo-list"></ul>
+                </div>
             </div>
         </div>
 
-        <div class="container2">
-            <!-- Content for container 2 goes here -->
-            <h2>Downroute</h2>
-            <p>This is the content of container 2.</p>
+        <!-- Downroute Containers -->
+        <div class="container">
+            <!-- Downroute Saturday -->
+            <h5 style="display: flex; align-items: center; justify-content: center; text-align: center;">
+                    <i class="material-icons" style="font-size: 24px; margin-right: 10px;">directions_bus</i>
+                    Downroute 
+                </h5>
+            <div class="downroute-container">
+                
+                <form>
+                    <br>
+                    <label for="saturday">Saturday</label>
+                    <input type="text" class='todo-inputs saturday-input'>
+                    <button class='todo-button saturday-button'>
+                        <i class='fas fa-plus-square'></i>
+                    </button>
+                </form>
+                <div class="todo-container saturday-todo-container">
+                    <ul class="todo-list saturday-todo-list"></ul>
+                </div>
+            </div>
+
+            <!-- Downroute Sunday -->
+            <div class="downroute-container">
+                
+                <form>
+                    <br>
+                    <label for="sunday">Sunday</label>
+                    <input type="text" class='todo-inputs sunday-input'>
+                    <button class='todo-button sunday-button'>
+                        <i class='fas fa-plus-square'></i>
+                    </button>
+                </form>
+                <div class="todo-container sunday-todo-container">
+                    <ul class="todo-list sunday-todo-list"></ul>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Todo List JavaScript code goes here
-        const todoInputs = document.querySelector(".todo-inputs");
-const todoButton = document.querySelector(".todo-button");
-const todoList = document.querySelector(".todo-list");
-const filterOption = document.querySelector(".filter-todos");
+        document.addEventListener("DOMContentLoaded", function () {
+            const dayButtons = document.querySelectorAll(".day-button");
 
-//event listners
-document.addEventListener("DOMContentLoaded", getTodos);
-todoButton.addEventListener("click", addTodos);
-todoList.addEventListener("click", deleteCheck);
-filterOption.addEventListener("click", filterTodo);
+            dayButtons.forEach(function (button) {
+                button.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    const timeInput = button.parentNode.querySelector(".todo-inputs");
+                    const busNoInput = button.parentNode.querySelector(".todo-inputs.bus-no-input");
+                    const todoList = button.parentNode.nextElementSibling.querySelector(".todo-list");
 
-function addTodos(e) {
-  e.preventDefault();
+                    const time = timeInput.value;
+                    const busNo = busNoInput.value;
 
-  //tododiv
-  const todoDiv = document.createElement("div");
-  todoDiv.classList.add("todo");
+                    // Create a new list item
+                    const todoDiv = document.createElement("div");
+                    todoDiv.classList.add("todo");
 
-  //new todo
-  const newTodo = document.createElement("li");
-  newTodo.classList.add("todo-item");
-  newTodo.innerText = todoInputs.value;
-  todoDiv.appendChild(newTodo);
+                    const newTodo = document.createElement("li");
+                    newTodo.classList.add("todo-item");
+                    newTodo.innerText = `${time} Bus no ${busNo}`;
+                    todoDiv.appendChild(newTodo);
 
-  //checked button
-  const compleatedButton = document.createElement("button");
-  compleatedButton.innerHTML = '<i class="fas fa-check"><i>';
-  compleatedButton.classList.add("complete-btn");
-  todoDiv.appendChild(compleatedButton);
-  //trash button
-  const trashButton = document.createElement("button");
-  trashButton.innerHTML = '<i class="fas fa-trash"><i>';
-  trashButton.classList.add("trash-btn");
-  todoDiv.appendChild(trashButton);
+                    const trashButton = document.createElement("button");
+                    trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+                    trashButton.classList.add("trash-btn");
+                    todoDiv.appendChild(trashButton);
 
-  // appened list
-  todoList.appendChild(todoDiv);
-  todoInputs.value = "";
-}
-function deleteCheck(e) {
-  const items = e.target;
+                    // Append the new item to the todo list
+                    todoList.appendChild(todoDiv);
 
-  //delete todo
-  if (items.classList[0] === "trash-btn") {
-    const todo = items.parentElement;
-
-    //todo animation
-    todo.classList.add("fall");
-    todo.addEventListener("transitionend", function () {
-      todo.remove();
-    });
-  }
-
-  //completed btn
-  if (items.classList[0] === "complete-btn") {
-    const todo = items.parentElement;
-    todo.classList.toggle("completed");
-  }
-}
-
-function filterTodo(e) {
-  const todos = todoList.childNodes;
-  todos.forEach(function (todo) {
-    switch (e.target.value) {
-      case "all":
-        todo.style.display = "flex";
-        break;
-      case "completed":
-        if (todo.classList.contains("completed")) {
-          todo.style.display = "flex";
-        } else {
-          todo.style.display = "none";
-        }
-        break;
-      case "uncompleted":
-        if (!todo.classList.contains("completed")) {
-          todo.style.display = "flex";
-        } else {
-          todo.style.display = "none";
-        }
-        break;
-    }
-  });
-}
-function getTodos() {
-  //check
-  let todos = [];
-
-  todos.forEach(function (todo) {
-    //todoDiv
-    const todoDiv = document.createElement("div");
-    todoDiv.classList.add("todo");
-
-    //create li
-    const newTodo = document.createElement("li");
-    newTodo.classList.add("todo-item");
-    newTodo.innerText = todo;
-    todoDiv.appendChild(newTodo);
-
-    //checked button
-    const compleatedButton = document.createElement("button");
-    compleatedButton.innerHTML = '<i class="fas fa-check"><i>';
-    compleatedButton.classList.add("complete-btn");
-    todoDiv.appendChild(compleatedButton);
-    //trash button
-    const trashButton = document.createElement("button");
-    trashButton.innerHTML = '<i class="fas fa-trash"><i>';
-    trashButton.classList.add("trash-btn");
-    todoDiv.appendChild(trashButton);
-    //append list
-    todoList.appendChild(todoDiv);
-  });
-}
-
-  
+                    // Clear input fields
+                    timeInput.value = "";
+                    busNoInput.value = "";
+                });
+            });
+        });
     </script>
 
-    {% endblock %}
+
+{% endblock %}
